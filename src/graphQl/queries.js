@@ -13,17 +13,30 @@ query
                     title,
                     overview,
                     releaseDate,
-                    images{
-                        backdrops{
-                          image(size: W780)
-                          
-                        },
-                        posters
+                  	numberOfRatings,
+                  	poster(size: W500),
+                    backdrop(size: W300),
+                  	rating,
+                  	details
+                  	{
+                      genres
+                      {
+                        name
+                      },
+                      runtime
+                    },
+                  	credits
+                    {
+                      cast
+                      {
+                        character,
+                        value
                         {
-                          image(size: W154)
-                          
+                          name,
+                          profilePicture(size:W45)                                               
                         }
                       }
+                    }
                 }
             }
         }

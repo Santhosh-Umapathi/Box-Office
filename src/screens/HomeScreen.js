@@ -5,6 +5,8 @@ import { View, Text, StyleSheet, TouchableOpacity, Button, Image, FlatList , Saf
 import { trendingMovies } from '../graphQl/axios';
 import { TRENDING_MOVIES } from '../graphQl/queries';
 
+//Components
+import Card from '../components/Card/Card';
 
 
 
@@ -36,29 +38,14 @@ const HomeScreen = (props) =>
       fetchData()
     }, [])
   
-    const renderItem = ({ item }) => 
-    {
-
-      console.log("URL =>",item.node.images.backdrops[0].image)
-      
-      return (
-        <View style={styles.item}>
-            <Text style={styles.title}>{item.node.title}</Text>
-            <Text style={styles.title}>{new Date(item.node.releaseDate).toLocaleDateString()}</Text>
-            <Image 
-              source = {{uri: item.node.images.backdrops[0].image}}
-              style = {{  width: 66,height: 58,}}
-            />
-
-        </View>
-      );}
+   
     
       return (
         <SafeAreaView style={styles.container}>
           <FlatList
             horizontal
             data={data}
-            renderItem={renderItem}
+            renderItem={({item})=> <Card item = {item}/>}
             keyExtractor={item => item.node.id.toString()}
           />
         </SafeAreaView>
@@ -66,34 +53,14 @@ const HomeScreen = (props) =>
 };
 
 const styles = StyleSheet.create({
-    container: {
+    container: 
+    {
       flex: 1,
       marginTop: StatusBar.currentHeight || 0,
-      backgroundColor: "blue",
+      backgroundColor: "grey",
     },
-    item: 
-    {
-        display:'flex',
-        alignSelf:'flex-end',
-        backgroundColor: '#f9c2ff',
-        padding: 20,
-        marginVertical: 8,
-        marginHorizontal: 16,
-        width: 250,
-        height:550,
-        borderRadius: 10,
-        elevation: 15,
-        shadowColor: "grey",
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.25,
-        shadowRadius: 10,
-        
-        
-      
-    },
-    title: {
-      fontSize: 32,
-    },
+ 
+   
   });
 
 export default HomeScreen;
