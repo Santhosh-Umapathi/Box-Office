@@ -9,18 +9,14 @@ const Card = (props) =>
     const {item} = props
 
     return (
-    <View style={styles.card}>
+    <View style={[styles.card, styles.dimensions]}>
 
-        <Image 
-          source = {{uri: item.node.poster}}
-          style = {styles.image}
-        />
-        
-        {/* <Text style={styles.title}>{item.node.title}</Text>
-        
-        <Text style={styles.subTitle}>{new Date(item.node.releaseDate).toLocaleDateString()}</Text>
-         */}
-        
+        <TouchableOpacity onPress = {() => console.log("Pressed")}>
+            <Image 
+            source = {{uri: item.node.poster}}
+            style = {styles.dimensions}
+            />    
+        </TouchableOpacity>
 
     </View>
     );
@@ -29,36 +25,20 @@ const Card = (props) =>
 const styles = StyleSheet.create({
     card:
     {
-        display:'flex',
         alignSelf:'flex-end',
-        padding: 20,
-        marginVertical: 8,
-        marginHorizontal: 16,
-        width: 200,
-        height:300,
-        borderRadius: 10,
+        margin: 10,
+        //Card
         elevation: 15,
-        shadowColor: "orange",
+        shadowColor: "#252525",
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.25,
         shadowRadius: 10,
-        overflow:'hidden',
-
     },
-    title: 
+    dimensions:
     {
-        fontSize: 20,
-    },
-    subTitle:
-    {
-        fontSize: 12
-    },
-    image:
-    {
-        alignSelf:"stretch",
-        width: 200,
-        height: 300,
-        position:"absolute",
+        width: 150,
+        height: 250,
+        borderRadius: 10,
     }
 });
 

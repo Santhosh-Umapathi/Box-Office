@@ -7,6 +7,7 @@ import { TRENDING_MOVIES } from '../graphQl/queries';
 
 //Components
 import Card from '../components/Card/Card';
+import Poster from '../components/Poster/Poster';
 
 
 
@@ -37,17 +38,28 @@ const HomeScreen = (props) =>
     {
       fetchData()
     }, [])
+
   
    
+    const randomPoster = Math.floor(Math.random() * 9)
+
+
     
       return (
         <SafeAreaView style={styles.container}>
-          <FlatList
-            horizontal
-            data={data}
-            renderItem={({item})=> <Card item = {item}/>}
-            keyExtractor={item => item.node.id.toString()}
-          />
+
+          <Poster url = {data[randomPoster]?.node.poster}/>
+
+
+          <View style = {styles.footer}>
+            <FlatList
+              horizontal
+              data={data}
+              renderItem={({item})=> <Card item = {item}/>}
+              keyExtractor={item => item.node.id.toString()}
+            />
+          </View>
+          
         </SafeAreaView>
       );
 };
@@ -56,9 +68,15 @@ const styles = StyleSheet.create({
     container: 
     {
       flex: 1,
+      justifyContent:"flex-start",
+      alignItems:'stretch',
       marginTop: StatusBar.currentHeight || 0,
-      backgroundColor: "grey",
     },
+    footer:
+    {
+      position:'absolute',
+      bottom: 20,
+    }
  
    
   });
