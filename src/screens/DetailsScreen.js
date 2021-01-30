@@ -1,5 +1,5 @@
 import React, {useEffect, useRef, useState} from 'react';
-import { View, Text, TextInput, StyleSheet, TouchableOpacity, Button, Image, Flatlist, Animated } from 'react-native';
+import { View, Text, StyleSheet, Button, Image, Flatlist, Animated } from 'react-native';
 
 import BottomSheet from 'reanimated-bottom-sheet';
 
@@ -10,6 +10,10 @@ import { animate } from '../animations/animations';
 import {moviesGraphQL} from '../graphQl/axios'
 import {MOVIE_DETAILS} from '../graphQl/queries'
 
+//Components
+import Spinner from '../components/Spinner/Spinner';
+
+
 
 const DetailsScreen = ({movie, open, setOpen}) =>
 {
@@ -19,7 +23,7 @@ const DetailsScreen = ({movie, open, setOpen}) =>
     const sheetRef = useRef(null);
 
     const [data, setData] = useState(null)
-
+    const [isLoading, setIsLoading] = useState(true)
 
     // console.log("MOVIE =>>",movie)
 
@@ -30,6 +34,7 @@ const DetailsScreen = ({movie, open, setOpen}) =>
       const results = response.data.data.movies.movie
 
       setData(results)
+      setIsLoading(false)
     }
 
     useEffect(() => 
@@ -37,7 +42,6 @@ const DetailsScreen = ({movie, open, setOpen}) =>
       fetchMovieDetails()
     }, [])
 
-    console.log("DATA =>", data)
   
     
     //Animation for Bottom Sheet
@@ -59,8 +63,18 @@ const DetailsScreen = ({movie, open, setOpen}) =>
       setOpen(false)
     }
 
+
+    console.log("DATA =>", data)
+
+    
+
+
+
+
+
     const renderContent = () => 
     {
+      
         return <Animated.View
           style={{
             backgroundColor: 'white',
@@ -69,10 +83,19 @@ const DetailsScreen = ({movie, open, setOpen}) =>
             opacity:fadeRef,
           }}
         >
-          <Text>Swipe down to close</Text>
-          <Button title = "Close" onPress = {closeHandler}/>
+
+          {
+            isLoading === true && open 
+            ? <Spinner />
+            : <>
+                <Text>Swipe down to close</Text>
+                <Button title = "Close" onPress = {closeHandler}/>
+              </>
+          }
+          
         </Animated.View>
     }
+
 
 
     return (

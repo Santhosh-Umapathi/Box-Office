@@ -1,16 +1,15 @@
 import React, {useState, useEffect} from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Button, Image, FlatList , SafeAreaView, StatusBar} from 'react-native';
+import { View, StyleSheet, ActivityIndicator} from 'react-native';
 
 //GraphQL
 import { moviesGraphQL } from '../graphQl/axios';
 import { TRENDING_MOVIES } from '../graphQl/queries';
 
 //Components
-import Card from '../components/Card/Card';
 import Poster from '../components/Poster/Poster';
 import DetailsScreen from './DetailsScreen';
 import CardList from '../components/Card/CardList';
-
+import Spinner from '../components/Spinner/Spinner';
 
 
 
@@ -63,7 +62,7 @@ const HomeScreen = (props) =>
 
     if(isLoading === true)
     {      
-      return <Text>Loading</Text>
+      return <Spinner />
     }
    
     return (
@@ -80,8 +79,6 @@ const HomeScreen = (props) =>
         setMovie = {setMovieHandler}
       />
 
-      
-      
     </View>
   );
     
@@ -92,10 +89,7 @@ const styles = StyleSheet.create({
     {
       flex: 1,
       justifyContent:"flex-start",
-    },
-    
- 
-   
+    }
   });
 
 export default HomeScreen;
