@@ -1,77 +1,67 @@
 export const TRENDING_MOVIES = `
 query
 {
-    movies
+  movies
+  {
+    trending(first: 10)
     {
-        trending(first: 10)
+      edges
+      {
+        node
         {
-            edges
+          id,
+          title,
+          releaseDate,
+          poster(size: W500),
+          details
+          {
+            genres
             {
-                node
-                {
-                    id,
-                    title,
-                    releaseDate,
-                  	poster(size: W500),
-                  	details
-                  	{
-                      genres
-                      {
-                        name
-                      },
-                      runtime
-                    },
-                  	
-                }
-            }
+              name
+            },
+            runtime
+          }
         }
+      }
     }
+  }
 }
 `
 
 
-export const MOVIE_DETAILS = `
+export const MOVIE_DETAILS = (movieId) => `
 query
 {
-    movies
+  movies
+  {
+    movie(id: ${movieId})
     {
-        trending(first: 10)
+      title,
+      overview,
+      releaseDate,
+      numberOfRatings,
+      poster(size: W185),
+      details
+      {
+        genres
         {
-            edges
-            {
-                node
-                {
-                    id,
-                    title,
-                    overview,
-                    releaseDate,
-                  	numberOfRatings,
-                  	poster(size: W500),
-                    backdrop(size: W300),
-                  	rating,
-                  	details
-                  	{
-                      genres
-                      {
-                        name
-                      },
-                      runtime
-                    },
-                  	credits
-                    {
-                      cast
-                      {
-                        character,
-                        value
-                        {
-                          name,
-                          profilePicture(size:W45)                                               
-                        }
-                      }
-                    }
-                }
-            }
+          name
+        },
+        runtime
+      },
+      credits
+      {
+        cast
+        {
+          character,
+          value
+          {
+            name,
+            profilePicture(size:W45)                                         
+          }
         }
+      }
     }
+  }
 }
 `

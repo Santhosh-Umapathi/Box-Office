@@ -1,10 +1,14 @@
-import React, {useEffect, useRef} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import { View, Text, TextInput, StyleSheet, TouchableOpacity, Button, Image, Flatlist, Animated } from 'react-native';
 
 import BottomSheet from 'reanimated-bottom-sheet';
+
 //Animation 
 import { animate } from '../animations/animations';
 
+//GraphQL
+import {moviesGraphQL} from '../graphQl/axios'
+import {MOVIE_DETAILS} from '../graphQl/queries'
 
 
 const DetailsScreen = ({movie, open, setOpen}) =>
@@ -14,6 +18,26 @@ const DetailsScreen = ({movie, open, setOpen}) =>
     const fadeRef = useRef(new Animated.Value(0)).current;
     const sheetRef = useRef(null);
 
+    const [data, setData] = useState(null)
+
+
+    // console.log("MOVIE =>>",movie)
+
+    const fetchMovieDetails = async () =>
+    {
+      const response = await moviesGraphQL.post("", {query: MOVIE_DETAILS(movie.id)})
+
+      const results = response.data.data.movies.movie
+
+      setData(results)
+    }
+
+    useEffect(() => 
+    {
+      fetchMovieDetails()
+    }, [])
+
+    console.log("DATA =>", data)
   
     
     //Animation for Bottom Sheet

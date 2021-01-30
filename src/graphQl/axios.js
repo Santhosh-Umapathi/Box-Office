@@ -1,6 +1,6 @@
 import axios from "axios";
 
-export const trendingMovies = axios.create({
+export const moviesGraphQL = axios.create({
     baseURL: "https://tmdb.apps.quintero.io/",
     
 })

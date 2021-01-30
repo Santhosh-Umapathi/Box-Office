@@ -2,7 +2,7 @@ import React, {useState, useEffect} from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Button, Image, FlatList , SafeAreaView, StatusBar} from 'react-native';
 
 //GraphQL
-import { trendingMovies } from '../graphQl/axios';
+import { moviesGraphQL } from '../graphQl/axios';
 import { TRENDING_MOVIES } from '../graphQl/queries';
 
 //Components
@@ -34,7 +34,7 @@ const HomeScreen = (props) =>
         setIsLoading(true)
 
         const randomNum = Math.floor(Math.random() * 9)
-        const response = await trendingMovies.post("",{query: TRENDING_MOVIES})
+        const response = await moviesGraphQL.post("",{query: TRENDING_MOVIES})
         const results = response.data.data.movies.trending.edges
 
         setData(results)
