@@ -1,13 +1,13 @@
-import React, {useState} from 'react';
-import { View, Text,  StyleSheet, TouchableOpacity, ImageBackground } from 'react-native';
+import React, {useState, useRef} from 'react';
+import { View, Text,  StyleSheet, TouchableOpacity, ImageBackground, StatusBar, Button , Animated} from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import Animated from 'react-native-reanimated';
-import BottomSheet from 'reanimated-bottom-sheet';
 
-const Poster = ({movie}) =>
+
+
+
+const Poster = ({movie, open, setOpen}) =>
 {
 
-    const [open, setOpen] = useState(false)
 
     const timeConvert = (num) =>
     { 
@@ -16,6 +16,7 @@ const Poster = ({movie}) =>
         return hours+"h " + minutes+"m";         
     }
 
+    //Constants
     const title = movie.title
     const poster = movie.poster
     const releaseDate = new Date(movie.releaseDate).getFullYear()
@@ -30,39 +31,20 @@ const Poster = ({movie}) =>
         return i
     })
     const runTime = timeConvert(movie.details.runtime)
-
+    const linearColors = ['transparent', 'transparent', 'black', 'black']
     
-    const sheetRef = React.useRef(null);
 
     //Reusable UI Components
     const footerText = text => <Text style = {styles.subTitle}>{text}</Text>
     const dot = <Text style = {styles.dot}>{'\u2B24'}</Text>
 
-    const renderContent = () => (
-        <View
-          style={{
-            backgroundColor: 'red',
-            padding: 16,
-            height: 450,
-          }}
-        >
-          <Text>Swipe down to close</Text>
-        </View>
-      );
-
-    // console.log("movie ==>",JSON.stringify(movie))
-
     return (
-        <View style={styles.container}>
             
-            <ImageBackground
-                source = {{uri:poster}}
-                style = {styles.imageBackground, {marginTop: open ? -150 : 0}}
-            >
-                <LinearGradient
-                    colors={['transparent', 'transparent', 'black', 'black']}
-                    style={styles.gradient}
-                />
+        <View style = {styles.imageContainer}>
+
+            <ImageBackground source = {{uri:poster}} style = {styles.imageBackground}>
+
+                <LinearGradient colors={linearColors} style={styles.gradient} />
 
                 <View style = {styles.body}>
                     <Text style = {styles.title}>{title}</Text>
@@ -75,7 +57,7 @@ const Poster = ({movie}) =>
                         {footerText(runTime)}
                     </View>
 
-                    <TouchableOpacity onPress = {() => sheetRef.current.snapTo(0)}>
+                    <TouchableOpacity onPress = {() => setOpen(true)}>
                         <Text style = {styles.button}>Open</Text>
                     </TouchableOpacity>
 
@@ -83,22 +65,15 @@ const Poster = ({movie}) =>
 
             </ImageBackground>
 
-            <BottomSheet
-                ref={sheetRef}
-                snapPoints={[150, 0]}
-                borderRadius={10}
-                renderContent={renderContent}
-            />
-           
         </View>
-        );
+    );
 };
 
-const styles = StyleSheet.create({
-    container:
+const styles = StyleSheet.create({ 
+    imageContainer:
     {
-        height: '70%',
-        alignItems: 'center',
+        width: "100%",
+        height:'70%'
     },
     imageBackground:
     {
@@ -159,9 +134,7 @@ const styles = StyleSheet.create({
         paddingVertical:5,
         paddingHorizontal: 40,
         marginBottom:50
-    },
-    
-    
+    }    
 });
 
 export default Poster;

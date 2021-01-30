@@ -8,6 +8,7 @@ import { TRENDING_MOVIES } from '../graphQl/queries';
 //Components
 import Card from '../components/Card/Card';
 import Poster from '../components/Poster/Poster';
+import DetailsScreen from './DetailsScreen';
 
 
 
@@ -22,8 +23,10 @@ const HomeScreen = (props) =>
     const [isLoading, setIsLoading] = useState(true)
     const [data, setData] = useState([])
     const [randomMovie, setRandomMovie] = useState(null)
+    const [openDetails, setOpenDetails] = useState(false)
+    
 
-
+    //GraphQL Request
     const fetchData = async () =>
     {
         setIsLoading(true)
@@ -44,30 +47,33 @@ const HomeScreen = (props) =>
       fetchData()
     }, [])
 
+    console.log(openDetails)
   
+
+
+
     if(isLoading === true)
     {      
       return <Text>Loading</Text>
     }
    
-
-
-    
         return (
-        <SafeAreaView style={styles.container}>
+        <View style={styles.container}>
 
-          <Poster movie = {randomMovie}/>
+          <Poster movie = {randomMovie} open = {openDetails} setOpen = {setOpenDetails}/>
 
-          <View style = {styles.footer}>
+          <DetailsScreen />
+
+          {/* <View style = {styles.footer}>
             <FlatList
               horizontal
               data={data}
               renderItem={({item})=> <Card item = {item}/>}
               keyExtractor={item => item.node.id.toString()}
             />
-          </View>
+          </View> */}
           
-        </SafeAreaView>
+        </View>
       );
     
 };
@@ -78,8 +84,6 @@ const styles = StyleSheet.create({
       flex: 1,
       justifyContent:"flex-start",
       alignItems:'stretch',
-      marginTop: StatusBar.currentHeight || 0,
-      // backgroundColor: "white",
     },
     footer:
     {
