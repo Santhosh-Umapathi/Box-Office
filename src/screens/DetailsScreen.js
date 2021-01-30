@@ -1,36 +1,42 @@
-import React, {useState, useRef} from 'react';
+import React, {useEffect, useRef} from 'react';
 import { View, Text, TextInput, StyleSheet, TouchableOpacity, Button, Image, Flatlist, Animated } from 'react-native';
 
 import BottomSheet from 'reanimated-bottom-sheet';
+//Animation 
+import { animate } from '../animations/animations';
 
 
-const DetailsScreen = (props) =>
+
+const DetailsScreen = ({movie, open, setOpen}) =>
 {
-    const [openBottomSheet, setOpenBottomSheet] = useState(false)
 
-    const fadeAnim = useRef(new Animated.Value(0)).current;
-
-    const fadeIn = () => {
-        // Will change fadeAnim value to 1 in 5 seconds
-        Animated.timing(fadeAnim, {
-          toValue: 1,
-          duration: 100,
-          useNativeDriver:true
-        }).start();
-      };
-    
-      const fadeOut = () => {
-        // Will change fadeAnim value to 0 in 5 seconds
-        Animated.timing(fadeAnim, {
-          toValue: 0,
-          duration: 500,
-          useNativeDriver:true
-
-        }).start();
-      };
-    
-
+    //Refs
+    const fadeRef = useRef(new Animated.Value(0)).current;
     const sheetRef = useRef(null);
+
+  
+    
+    //Animation for Bottom Sheet
+    useEffect(() => 
+    {
+      if(open)
+        {
+          animate(fadeRef, 1, 100)
+          sheetRef.current.snapTo(0)
+        }
+
+      else
+      {
+        animate(fadeRef, 0, 500)
+      }
+    }, [open])
+    
+
+    const closeHandler = () =>
+    {
+      sheetRef.current.snapTo(1)
+      setOpen(false)
+    }
 
     const renderContent = () => 
     {
@@ -40,39 +46,28 @@ const DetailsScreen = (props) =>
             backgroundColor: 'orange',
             padding: 16,
             height: 500,
-            opacity:fadeAnim,
-            // zIndex: 200
+            opacity:fadeRef,
           }}
         >
           <Text>Swipe down to close</Text>
-          <Button title = "Close" onPress = {() => sheetRef.current.snapTo(1)}/>
+          <Button title = "Close" onPress = {closeHandler}/>
         </Animated.View>
     
         
     }
 
-const {navigation} = props
 
     return (
         <View style={styles.containerView}>
-            <Text>Jack</Text>
-            <Text>Jack</Text>
-            <Text>Jack</Text>
-            <Text>Jack</Text>
-            <Text>Jack</Text>
-            <Text>Jack</Text>
-            <Text>Jack</Text>
-            <Text>Jack</Text>
-            <Text>Jack</Text>
-
-            {/* <BottomSheet
+            <BottomSheet
                 ref={sheetRef}
                 snapPoints={["60%","30%"]}
                 borderRadius={10}
                 renderContent={renderContent}
-                initialSnap = {1}
-                onCloseStart = {() => fadeOut()}
-            /> */}
+                initialSnap = {0}
+                onCloseStart = {closeHandler}
+                
+            />
         </View>
         );
 };
@@ -80,8 +75,9 @@ const {navigation} = props
 const styles = StyleSheet.create({
     containerView:
     {
+      display: 'flex',
         // flex: 1,
-        // height:'30%',
+        height:'30%',
         backgroundColor: 'orange',
         
     },

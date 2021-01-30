@@ -54,13 +54,10 @@ const HomeScreen = (props) =>
 
     const setMovieHandler = (id) =>
     {
-        const selectedMovie = data.filter(item => item.node.id === id)
-
-        setMovie(selectedMovie)
+      const selectedMovie = data.filter(item => item.node.id === id)
+      setMovie(selectedMovie)
     }
 
-    console.log("RANDOM =>", randomMovie)
-    console.log("MOVIE =>", movie)
 
 
     if(isLoading === true)
@@ -68,24 +65,24 @@ const HomeScreen = (props) =>
       return <Text>Loading</Text>
     }
    
-        return (
-        <View style={styles.container}>
+    return (
+    <View style={styles.container}>
 
-          <Poster movie = {randomMovie} open = {openDetails} setOpen = {setOpenDetails} setMovie = {setMovieHandler}/>
+      <Poster movie = {randomMovie} open = {openDetails} setOpen = {setOpenDetails} setMovie = {setMovieHandler}/>
 
-          <DetailsScreen movie = {movie} />
+      <DetailsScreen movie = {movie} open = {openDetails} setOpen = {setOpenDetails}/>
 
-          <View style = {styles.footer}>
-            <FlatList
-              horizontal
-              data={data}
-              renderItem={({item})=> <Card movie = {item.node} setMovie = {setMovieHandler} setOpen = {setOpenDetails}/>}
-              keyExtractor={item => item.node.id.toString()}
-            />
-          </View>
-          
-        </View>
-      );
+      <View style = {styles.footer}>
+        <FlatList
+          horizontal
+          data={data}
+          renderItem={({item})=> <Card movie = {item.node} setMovie = {setMovieHandler} setOpen = {setOpenDetails}/>}
+          keyExtractor={item => item.node.id.toString()}
+        />
+      </View>
+      
+    </View>
+  );
     
 };
 

@@ -2,7 +2,7 @@
 import {Animated} from 'react-native';
 
 
-export const slideAnimation = (ref, toValue, duration) =>
+export const animate = (ref, toValue, duration) =>
 {
     return Animated.timing(ref, 
     {
@@ -11,3 +11,6 @@ export const slideAnimation = (ref, toValue, duration) =>
         useNativeDriver:true
     }).start();
 }
+
+
+

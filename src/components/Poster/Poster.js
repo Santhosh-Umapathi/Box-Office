@@ -4,7 +4,7 @@ import { View, Text,  StyleSheet, TouchableOpacity, ImageBackground, Animated} f
 import { LinearGradient } from 'expo-linear-gradient';
 
 //Animations
-import { slideAnimation } from '../../animations/animations';
+import { animate } from '../../animations/animations';
 //Utils
 import {timeConvert, genreHandler} from '../../utils/utils'
 
@@ -44,9 +44,9 @@ const Poster = ({movie, open, setOpen, setMovie}) =>
     useEffect(() => 
     {
         if(open)
-            slideAnimation(slideView, -100, 500)
+            animate(slideView, -100, 500)
         else
-            slideAnimation(slideView, 0, 500)        
+            animate(slideView, 0, 500)        
     }, [open])
 
 
