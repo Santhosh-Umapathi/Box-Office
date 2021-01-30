@@ -19,19 +19,24 @@ const HomeScreen = (props) =>
 {
 
 
-    const [isLoading, setIsLoading] = useState(false)
+    const [isLoading, setIsLoading] = useState(true)
     const [data, setData] = useState([])
+    const [randomMovie, setRandomMovie] = useState(null)
 
 
     const fetchData = async () =>
     {
         setIsLoading(true)
 
-        await trendingMovies.post("",{query: TRENDING_MOVIES})
-        .then(res => setData(res.data.data.movies.trending.edges))
-        .catch(e => console.log(e))
-        .finally(() => setIsLoading(false))
+        const randomNum = Math.floor(Math.random() * 9)
+        const response = await trendingMovies.post("",{query: TRENDING_MOVIES})
+        const results = response.data.data.movies.trending.edges
+
+        setData(results)
+        setRandomMovie(results[randomNum].node)        
+        setIsLoading(false)
     }
+
   
     //Get Trending Movies
     useEffect(() => 
@@ -40,16 +45,18 @@ const HomeScreen = (props) =>
     }, [])
 
   
+    if(isLoading === true)
+    {      
+      return <Text>Loading</Text>
+    }
    
-    const randomPoster = Math.floor(Math.random() * 9)
 
 
     
-      return (
+        return (
         <SafeAreaView style={styles.container}>
 
-          <Poster url = {data[randomPoster]?.node.poster}/>
-
+          <Poster movie = {randomMovie}/>
 
           <View style = {styles.footer}>
             <FlatList
@@ -62,6 +69,7 @@ const HomeScreen = (props) =>
           
         </SafeAreaView>
       );
+    
 };
 
 const styles = StyleSheet.create({
@@ -71,6 +79,7 @@ const styles = StyleSheet.create({
       justifyContent:"flex-start",
       alignItems:'stretch',
       marginTop: StatusBar.currentHeight || 0,
+      // backgroundColor: "white",
     },
     footer:
     {
