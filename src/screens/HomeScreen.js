@@ -24,6 +24,7 @@ const HomeScreen = (props) =>
     const [data, setData] = useState([])
     const [randomMovie, setRandomMovie] = useState(null)
     const [openDetails, setOpenDetails] = useState(false)
+    const [movie, setMovie] = useState(null)
     
 
     //GraphQL Request
@@ -36,7 +37,8 @@ const HomeScreen = (props) =>
         const results = response.data.data.movies.trending.edges
 
         setData(results)
-        setRandomMovie(results[randomNum].node)        
+        setRandomMovie(results[randomNum].node)  
+        setMovie(results[randomNum].node)      
         setIsLoading(false)
     }
 
@@ -47,9 +49,18 @@ const HomeScreen = (props) =>
       fetchData()
     }, [])
 
-    console.log(openDetails)
   
+    
 
+    const setMovieHandler = (id) =>
+    {
+        const selectedMovie = data.filter(item => item.node.id === id)
+
+        setMovie(selectedMovie)
+    }
+
+    console.log("RANDOM =>", randomMovie)
+    console.log("MOVIE =>", movie)
 
 
     if(isLoading === true)
@@ -60,18 +71,18 @@ const HomeScreen = (props) =>
         return (
         <View style={styles.container}>
 
-          <Poster movie = {randomMovie} open = {openDetails} setOpen = {setOpenDetails}/>
+          <Poster movie = {randomMovie} open = {openDetails} setOpen = {setOpenDetails} setMovie = {setMovieHandler}/>
 
-          <DetailsScreen />
+          <DetailsScreen movie = {movie} />
 
-          {/* <View style = {styles.footer}>
+          <View style = {styles.footer}>
             <FlatList
               horizontal
               data={data}
-              renderItem={({item})=> <Card item = {item}/>}
+              renderItem={({item})=> <Card movie = {item.node} setMovie = {setMovieHandler} setOpen = {setOpenDetails}/>}
               keyExtractor={item => item.node.id.toString()}
             />
-          </View> */}
+          </View>
           
         </View>
       );

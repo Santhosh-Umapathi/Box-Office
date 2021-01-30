@@ -1,46 +1,58 @@
-import React, {useState, useRef} from 'react';
-import { View, Text,  StyleSheet, TouchableOpacity, ImageBackground, StatusBar, Button , Animated} from 'react-native';
+import React, {useRef, useEffect} from 'react';
+import { View, Text,  StyleSheet, TouchableOpacity, ImageBackground, Animated} from 'react-native';
+//Linear Gradient
 import { LinearGradient } from 'expo-linear-gradient';
 
+//Animations
+import { slideAnimation } from '../../animations/animations';
+//Utils
+import {timeConvert, genreHandler} from '../../utils/utils'
 
 
-
-const Poster = ({movie, open, setOpen}) =>
+const Poster = ({movie, open, setOpen, setMovie}) =>
 {
 
-
-    const timeConvert = (num) =>
-    { 
-        const hours = Math.floor(num / 60);  
-        const minutes = num % 60;
-        return hours+"h " + minutes+"m";         
-    }
-
-    //Constants
+    //Movie Details
+    const id = movie.id
     const title = movie.title
     const poster = movie.poster
     const releaseDate = new Date(movie.releaseDate).getFullYear()
-    const genre = movie.details.genres.map((item, index) => 
-    {
-        let i
-        if(index+1 !== movie.details.genres.length)
-            i = item.name+"/"
-        else
-            i = item.name
-
-        return i
-    })
+    const genre = genreHandler(movie.details.genres)
     const runTime = timeConvert(movie.details.runtime)
+
+    //Constants
+    const slideView = useRef(new Animated.Value(0)).current;
+    const transformStyle = {transform : [{ translateY : slideView}]}
     const linearColors = ['transparent', 'transparent', 'black', 'black']
-    
+
 
     //Reusable UI Components
     const footerText = text => <Text style = {styles.subTitle}>{text}</Text>
     const dot = <Text style = {styles.dot}>{'\u2B24'}</Text>
 
+
+
+    //Open Button Action
+    const openButtonHandler = () =>
+    {
+        setOpen(true)
+        setMovie(id)
+    }
+
+
+    //Animate Poster
+    useEffect(() => 
+    {
+        if(open)
+            slideAnimation(slideView, -100, 500)
+        else
+            slideAnimation(slideView, 0, 500)        
+    }, [open])
+
+
+    //UI
     return (
-            
-        <View style = {styles.imageContainer}>
+        <Animated.View style = {[styles.imageContainer, transformStyle]}>
 
             <ImageBackground source = {{uri:poster}} style = {styles.imageBackground}>
 
@@ -57,7 +69,7 @@ const Poster = ({movie, open, setOpen}) =>
                         {footerText(runTime)}
                     </View>
 
-                    <TouchableOpacity onPress = {() => setOpen(true)}>
+                    <TouchableOpacity onPress = {openButtonHandler}>
                         <Text style = {styles.button}>Open</Text>
                     </TouchableOpacity>
 
@@ -65,10 +77,11 @@ const Poster = ({movie, open, setOpen}) =>
 
             </ImageBackground>
 
-        </View>
+        </Animated.View>
     );
 };
 
+//Styles
 const styles = StyleSheet.create({ 
     imageContainer:
     {

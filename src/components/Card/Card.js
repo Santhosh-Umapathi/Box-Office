@@ -1,21 +1,22 @@
-import React, {useState} from 'react';
-import { View, Text, TextInput, StyleSheet, TouchableOpacity, Button, Image, Flatlist } from 'react-native';
+import React from 'react';
+import { View, StyleSheet, TouchableOpacity, Image } from 'react-native';
 
-const Card = (props) =>
+const Card = ({movie, setMovie, setOpen}) =>
 {
 
 
+    const cardClickHandler = () =>
+    {
+        setMovie(movie.id)
+        setOpen(true)
+    }
 
-    const {item} = props
 
     return (
     <View style={[styles.card, styles.dimensions]}>
 
-        <TouchableOpacity onPress = {() => console.log("Pressed")}>
-            <Image 
-            source = {{uri: item.node.poster}}
-            style = {styles.dimensions}
-            />    
+        <TouchableOpacity onPress = {cardClickHandler} activeOpacity = {0.8}>
+            <Image source = {{uri: movie.poster}} style = {styles.dimensions} />    
         </TouchableOpacity>
 
     </View>
