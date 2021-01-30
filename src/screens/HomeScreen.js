@@ -9,6 +9,7 @@ import { TRENDING_MOVIES } from '../graphQl/queries';
 import Card from '../components/Card/Card';
 import Poster from '../components/Poster/Poster';
 import DetailsScreen from './DetailsScreen';
+import CardList from '../components/Card/CardList';
 
 
 
@@ -72,14 +73,14 @@ const HomeScreen = (props) =>
 
       <DetailsScreen movie = {movie} open = {openDetails} setOpen = {setOpenDetails}/>
 
-      <View style = {styles.footer}>
-        <FlatList
-          horizontal
-          data={data}
-          renderItem={({item})=> <Card movie = {item.node} setMovie = {setMovieHandler} setOpen = {setOpenDetails}/>}
-          keyExtractor={item => item.node.id.toString()}
-        />
-      </View>
+      <CardList 
+        data = {data} 
+        open = {openDetails} 
+        setOpen = {setOpenDetails} 
+        setMovie = {setMovieHandler}
+      />
+
+      
       
     </View>
   );
@@ -91,13 +92,8 @@ const styles = StyleSheet.create({
     {
       flex: 1,
       justifyContent:"flex-start",
-      alignItems:'stretch',
     },
-    footer:
-    {
-      position:'absolute',
-      bottom: 20,
-    }
+    
  
    
   });

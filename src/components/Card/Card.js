@@ -1,25 +1,29 @@
 import React from 'react';
 import { View, StyleSheet, TouchableOpacity, Image } from 'react-native';
 
+
 const Card = ({movie, setMovie, setOpen}) =>
 {
 
-
+    
+    //Movie Click Handler
     const cardClickHandler = () =>
     {
         setMovie(movie.id)
         setOpen(true)
     }
 
+   
+
 
     return (
-    <View style={[styles.card, styles.dimensions]}>
+        <View style={[styles.card, styles.dimensions]}>
 
-        <TouchableOpacity onPress = {cardClickHandler} activeOpacity = {0.8}>
-            <Image source = {{uri: movie.poster}} style = {styles.dimensions} />    
-        </TouchableOpacity>
+            <TouchableOpacity onPress = {cardClickHandler} activeOpacity = {0.8}>
+                <Image source = {{uri: movie.poster}} style = {styles.dimensions} />    
+            </TouchableOpacity>
 
-    </View>
+        </View>
     );
 };
 

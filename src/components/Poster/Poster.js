@@ -44,9 +44,9 @@ const Poster = ({movie, open, setOpen, setMovie}) =>
     useEffect(() => 
     {
         if(open)
-            animate(slideView, -100, 500)
+            animate(slideView, -100, 200)
         else
-            animate(slideView, 0, 500)        
+            animate(slideView, 0, 200)        
     }, [open])
 
 
