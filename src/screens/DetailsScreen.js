@@ -1,62 +1,45 @@
 import React, {useEffect, useRef, useState} from 'react';
-import { View, Text, StyleSheet, Button, Image, Flatlist, Animated } from 'react-native';
+import { View, StyleSheet} from 'react-native';
 
+//Bottom Sheet
 import BottomSheet from 'reanimated-bottom-sheet';
+import BottomSheetRender from '../components/BottomSheet/BottomSheet';
 
-//Animation 
-import { animate } from '../animations/animations';
-
-//GraphQL
-import {moviesGraphQL} from '../graphQl/axios'
-import {MOVIE_DETAILS} from '../graphQl/queries'
-
-//Components
-import Spinner from '../components/Spinner/Spinner';
+//Utils
+import { genreHandler, timeConvert } from '../utils/utils';
 
 
 
-const DetailsScreen = ({movie, open, setOpen}) =>
+
+
+const DetailsScreen = ({movie, open, setOpen, isLoading}) =>
 {
 
     //Refs
-    const fadeRef = useRef(new Animated.Value(0)).current;
     const sheetRef = useRef(null);
 
+    //State
     const [data, setData] = useState(null)
-    const [isLoading, setIsLoading] = useState(true)
 
-    // console.log("MOVIE =>>",movie)
 
-    const fetchMovieDetails = async () =>
-    {
-      const response = await moviesGraphQL.post("", {query: MOVIE_DETAILS(movie.id)})
-
-      const results = response.data.data.movies.movie
-
-      setData(results)
-      setIsLoading(false)
-    }
-
+    //Get Movie Details
     useEffect(() => 
     {
-      fetchMovieDetails()
-    }, [])
+      setData(movie)
+    }, [movie])
 
-  
-    
+
     //Animation for Bottom Sheet
     useEffect(() => 
     {
       if(open)
-        {
-          animate(fadeRef, 1, 100)
-          sheetRef.current.snapTo(0)
-        }
-      else
-        animate(fadeRef, 0, 100)
+      {
+        sheetRef.current.snapTo(0)
+      }
     }, [open])
     
-
+    
+    //Bottom Sheet Close Handler
     const closeHandler = () =>
     {
       sheetRef.current.snapTo(1)
@@ -64,51 +47,61 @@ const DetailsScreen = ({movie, open, setOpen}) =>
     }
 
 
-    console.log("DATA =>", data)
-
     
 
+    // console.log("DATA =>", data)
+    let title, releaseDate, poster, genre, runtime, rating, description, cast
 
+    if(data)
+    {
+       title = data?.title
+       releaseDate = new Date(data?.releaseDate).getFullYear()
+       poster = data?.poster
+       genre =  genreHandler(data?.details.genres)
+       runtime = timeConvert(data?.details.runtime)
+       rating = data?.rating
+       description = data?.overview
+       cast = data?.credits?.cast
+    }
+    
 
+ 
 
 
     const renderContent = () => 
     {
       
-        return <Animated.View
-          style={{
-            backgroundColor: 'white',
-            padding: 16,
-            height: 500,
-            opacity:fadeRef,
-          }}
-        >
-
-          {
-            isLoading === true && open 
-            ? <Spinner />
-            : <>
-                <Text>Swipe down to close</Text>
-                <Button title = "Close" onPress = {closeHandler}/>
-              </>
-          }
-          
-        </Animated.View>
+        return <BottomSheetRender 
+          open={open} 
+          isLoading={isLoading}
+          poster={poster}
+          releaseDate={releaseDate} 
+          closeHandler={closeHandler} 
+          title={title}
+          genre={genre}
+          runtime={runtime}
+          rating={rating}
+          description={description}
+          cast={cast}
+        />
+        
     }
 
 
 
     return (
-        <View style={styles.containerView}>
-            <BottomSheet
-                ref={sheetRef}
-                snapPoints={["60%","30%"]}
-                borderRadius={10}
-                renderContent={renderContent}
-                initialSnap = {1}
-                onCloseStart = {closeHandler}
-            />
-        </View>
+      <View style={styles.containerView}>
+        <BottomSheet
+          ref={sheetRef}
+          snapPoints={["60%","30%"]}
+          borderRadius={10}
+          renderContent={renderContent}
+          initialSnap = {1}
+          onCloseStart = {closeHandler}
+          onCloseEnd = {closeHandler}
+          enabledBottomInitialAnimation = {true}
+        />
+      </View>
     );
 };
 

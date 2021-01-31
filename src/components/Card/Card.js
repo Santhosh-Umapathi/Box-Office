@@ -4,7 +4,6 @@ import { View, StyleSheet, TouchableOpacity, Image } from 'react-native';
 
 const Card = ({movie, setMovie, setOpen}) =>
 {
-
     
     //Movie Click Handler
     const cardClickHandler = () =>
@@ -13,9 +12,7 @@ const Card = ({movie, setMovie, setOpen}) =>
         setOpen(true)
     }
 
-   
-
-
+    //UI
     return (
         <View style={[styles.card, styles.dimensions]}>
 
@@ -27,6 +24,7 @@ const Card = ({movie, setMovie, setOpen}) =>
     );
 };
 
+//Styles
 const styles = StyleSheet.create({
     card:
     {

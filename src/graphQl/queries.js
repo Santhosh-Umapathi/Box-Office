@@ -1,67 +1,70 @@
-export const TRENDING_MOVIES = `
-query
-{
-  movies
+import gql from 'graphql-tag';
+
+//Get Trending Movies
+export const TRENDING_MOVIES = gql`
+  query
   {
-    trending(first: 10)
+    movies
     {
-      edges
+      trending(first: 10)
       {
-        node
+        edges
         {
-          id,
-          title,
-          releaseDate,
-          poster(size: W500),
-          details
+          node
           {
-            genres
+            id,
+            title,
+            releaseDate,
+            poster(size: W500),
+            details
             {
-              name
-            },
-            runtime
+              genres
+              {
+                name
+              },
+              runtime
+            }
           }
         }
       }
     }
   }
-}
 `
 
-
-export const MOVIE_DETAILS = (movieId) => `
-query
-{
-  movies
+//Get Selected Movie Details
+export const MOVIE_DETAILS = (movieId) => gql`
+  query
   {
-    movie(id: ${movieId})
+    movies
     {
-      title,
-      overview,
-      releaseDate,
-      numberOfRatings,
-      poster(size: W185),
-      details
+      movie(id: ${movieId})
       {
-        genres
+        title,
+        overview,
+        releaseDate,
+        rating,
+        poster(size: W500),
+        details
         {
-          name
-        },
-        runtime
-      },
-      credits
-      {
-        cast
-        {
-          character,
-          value
+          genres
           {
-            name,
-            profilePicture(size:W45)                                         
+            name
+          },
+          runtime
+        },
+        credits
+        {
+          cast
+          {
+            character,
+            value
+            {
+              name,
+              profilePicture(size:W185)                                         
+            }
           }
         }
       }
     }
   }
-}
 `

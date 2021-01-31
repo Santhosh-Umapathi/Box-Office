@@ -1,95 +1,125 @@
 import React, {useState, useEffect} from 'react';
-import { View, StyleSheet, ActivityIndicator} from 'react-native';
+import { View, StyleSheet } from 'react-native';
 
 //GraphQL
-import { moviesGraphQL } from '../graphQl/axios';
-import { TRENDING_MOVIES } from '../graphQl/queries';
+import { TRENDING_MOVIES, MOVIE_DETAILS } from '../graphQl/queries';
+import { graphQl } from '../graphQl/apollo';
 
 //Components
 import Poster from '../components/Poster/Poster';
 import DetailsScreen from './DetailsScreen';
 import CardList from '../components/Card/CardList';
 import Spinner from '../components/Spinner/Spinner';
+import SplashScreen from './SplashScreen';
 
 
 
 
 
 
-const HomeScreen = (props) =>
+const HomeScreen = () =>
 {
 
 
+    //State
     const [isLoading, setIsLoading] = useState(true)
-    const [data, setData] = useState([])
-    const [randomMovie, setRandomMovie] = useState(null)
+    const [detailsIsLoading, setDetailsIsLoading] = useState(null)
     const [openDetails, setOpenDetails] = useState(false)
+    const [data, setData] = useState([])
     const [movie, setMovie] = useState(null)
-    
+    const [movieData, setMovieData] = useState(null)
+    const [showSplashScreen, setShowSplashScreen] = useState(true)
+
+
+    const setMovieHandler = (id) => setMovie(id)
+
 
     //GraphQL Request
-    const fetchData = async () =>
+    const fetchTrendingMovies = async () =>
     {
         setIsLoading(true)
-
         const randomNum = Math.floor(Math.random() * 9)
-        const response = await moviesGraphQL.post("",{query: TRENDING_MOVIES})
-        const results = response.data.data.movies.trending.edges
+        const response = await graphQl.query({query: TRENDING_MOVIES})
+        const results = response.data.movies.trending.edges
 
         setData(results)
-        setRandomMovie(results[randomNum].node)  
-        setMovie(results[randomNum].node)      
+        setMovieData(results[randomNum].node)  
         setIsLoading(false)
     }
 
+    //GraphQL Request
+    const fetchMovieDetails = async () =>
+    {
+      setDetailsIsLoading(true)
+      const response = await graphQl.query({ query: MOVIE_DETAILS(movie) })
+      const results = response.data.movies.movie
+
+      setMovieData(results)
+      setDetailsIsLoading(false)
+    }
   
     //Get Trending Movies
     useEffect(() => 
     {
-      fetchData()
+      //Splash Screen
+      setTimeout(() => 
+      {
+        setShowSplashScreen(false)
+      }, 5000);
+
+      fetchTrendingMovies()
     }, [])
 
-  
+    //Get Movie Details
+    useEffect(() => 
+    {
+      if(movie)
+        fetchMovieDetails()
+    }, [movie])
+    
     
 
-    const setMovieHandler = (id) =>
-    {
-      const selectedMovie = data.filter(item => item.node.id === id)
-      setMovie(selectedMovie)
-    }
 
 
-
-    if(isLoading === true)
-    {      
-      return <Spinner />
-    }
-   
     return (
-    <View style={styles.container}>
-
-      <Poster movie = {randomMovie} open = {openDetails} setOpen = {setOpenDetails} setMovie = {setMovieHandler}/>
-
-      <DetailsScreen movie = {movie} open = {openDetails} setOpen = {setOpenDetails}/>
-
-      <CardList 
-        data = {data} 
-        open = {openDetails} 
-        setOpen = {setOpenDetails} 
-        setMovie = {setMovieHandler}
-      />
-
-    </View>
+        showSplashScreen 
+        ? <SplashScreen /> 
+        : isLoading 
+          ? <Spinner />
+          : <View style={styles.container}>
+              <Poster 
+                movie = {movieData} 
+                open = {openDetails} 
+                setOpen = {setOpenDetails} 
+                setMovie = {setMovieHandler}
+              />
+      
+              <DetailsScreen 
+                movie = {movieData} 
+                open = {openDetails} 
+                setOpen = {setOpenDetails} 
+                isLoading = {detailsIsLoading}
+              />
+        
+              <CardList 
+                data = {data} 
+                open = {openDetails} 
+                setOpen = {setOpenDetails} 
+                setMovie = {setMovieHandler}
+              />
+      
+            </View>
   );
     
 };
 
+//Styles
 const styles = StyleSheet.create({
-    container: 
-    {
-      flex: 1,
-      justifyContent:"flex-start",
-    }
-  });
+  container: 
+  {
+    flex: 1,
+    justifyContent:"flex-start",
+  }
+});
 
 export default HomeScreen;

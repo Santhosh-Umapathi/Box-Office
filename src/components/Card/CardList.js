@@ -9,22 +9,20 @@ import Card from './Card';
 
 const CardList = ({data, open, setMovie, setOpen}) =>
 {
-
     //Refs
-    const fadeRef = useRef(new Animated.Value(1)).current;
+    const slideRef = useRef(new Animated.Value(0)).current;
 
     //Animate Card
     useEffect(() => 
     {
         if(open)
-            animate(fadeRef, 0, 200)
+            animate(slideRef, 400, 200)
         else
-            animate(fadeRef, 1, 200)        
+            animate(slideRef, 0, 200)        
     }, [open])
 
 
-
-    //Cards for Data
+    //Cards for Trending Movies List
     const renderItem = ({item}) =>
     (
         <Card 
@@ -33,10 +31,11 @@ const CardList = ({data, open, setMovie, setOpen}) =>
             setOpen = {setOpen}
         />
     )
+    
 
-
+    //UI
     return (
-        <Animated.View style = {[styles.cardList, {opacity: fadeRef}]}>
+        <Animated.View style = {[styles.cardList, {transform: [{translateY:slideRef}]}]}>
             <FlatList
                 horizontal
                 data={data}
@@ -44,7 +43,7 @@ const CardList = ({data, open, setMovie, setOpen}) =>
                 keyExtractor={item => item.node.id.toString()}
             />
         </Animated.View>
-        );
+    );
 };
 
 const styles = StyleSheet.create({

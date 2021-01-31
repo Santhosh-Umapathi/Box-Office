@@ -8,9 +8,14 @@ import { animate } from '../../animations/animations';
 //Utils
 import {timeConvert, genreHandler} from '../../utils/utils'
 
+//Styles
+import { imageStyle } from '../../styles/styles';
+
 
 const Poster = ({movie, open, setOpen, setMovie}) =>
 {
+    //Refs
+    const slideView = useRef(new Animated.Value(0)).current;
 
     //Movie Details
     const id = movie.id
@@ -21,7 +26,6 @@ const Poster = ({movie, open, setOpen, setMovie}) =>
     const runTime = timeConvert(movie.details.runtime)
 
     //Constants
-    const slideView = useRef(new Animated.Value(0)).current;
     const transformStyle = {transform : [{ translateY : slideView}]}
     const linearColors = ['transparent', 'transparent', 'black', 'black']
 
@@ -54,7 +58,7 @@ const Poster = ({movie, open, setOpen, setMovie}) =>
     return (
         <Animated.View style = {[styles.imageContainer, transformStyle]}>
 
-            <ImageBackground source = {{uri:poster}} style = {styles.imageBackground}>
+            <ImageBackground source = {{uri:poster}} style = {imageStyle}>
 
                 <LinearGradient colors={linearColors} style={styles.gradient} />
 
@@ -88,11 +92,6 @@ const styles = StyleSheet.create({
         width: "100%",
         height:'70%'
     },
-    imageBackground:
-    {
-        width:"100%",
-        height:'100%',
-    },
     gradient:
     {
         position: 'absolute',
@@ -122,7 +121,9 @@ const styles = StyleSheet.create({
     subTitleContainer:
     {
         display:'flex',
+        flexWrap:'wrap',
         alignItems: 'center',
+        justifyContent:'center',
         flexDirection:'row',
         marginBottom:20
     },
